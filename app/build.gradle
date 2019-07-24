@@ -5,17 +5,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
-
-
 android {
-    signingConfigs {
-        config {
-            storeFile file('/media/martijn/Other_HDD/android-projects/tielbeke_admin_key.jks')
-            keyAlias 'key0'
-            keyPassword 'Quant0mmech'
-            storePassword 'M4se!new'
-        }
-    }
 
     dataBinding {
         enabled = true
@@ -31,15 +21,12 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testApplicationId "com.apps.m.tielbeke4_normal_test"
     }
+
+
     buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
-        }
+
     }
-    productFlavors {
-    }
+
 }
 
 dependencies {
