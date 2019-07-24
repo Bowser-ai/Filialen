@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name" >Filialen</string>
+    <string name="diversen_title" >Diversen</string>
+    <string name="zoeken" >Zoeken</string>
+    <string name="zoek_button_text" >Zoek!</string>
+    <string name="Invoer_FiliaalNummer" >Voer het filiaalnummer in</string>
+    <string name="kaart_button_text">Kaart</string>
+    <string name="filiaal_niet_gevonden_text">"Filiaal niet gevonden!"</string>
+    <string name="app_info" >Deze applicatie is ontworpen en ontwikkeld door:\n
+        Martijn Vermeulen\n
+        E-Mail:MartijnVermeulen1@gmail.com\n
+        ApplicatieVersie 1.93 (22 april 2019) \n\n\n
+        Nieuwe Winkels kunnen doorgegeven worden via: </string>
+    <string name="E_mail" >aw.vermeulen@planet.nl</string>
+    <string name="main_mededelingen_list_text">%1$s\n%2$s</string>
+    <string name="voer_mededeling_in" >Voer mededeling in</string>
+    <string name="telefoneren">Telefoneren</string>
+    <string name="kruidvat">Kruidvat</string>
+    <string name="geen_invoer">"Geen invoer"</string>
+    <string name="geen_geldig_adres">"Filiaal heeft geen geldig adres"</string>
+    <string name="geen_geldig_telefoonnummer">"Filiaal heeft geen geldig telefoonnummer"</string>
+    <string name="melding">Meldingen %1$s</string>
+    <string name="bel">Bel</string>
+    <string name="geen_geldig_filiaal_gekozen">Geen geldig filiaal gekozen</string>
+
+
+</resources>

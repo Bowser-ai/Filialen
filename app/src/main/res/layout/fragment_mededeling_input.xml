@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+        <variable name="viewModel" type="com.apps.m.tielbeke4.viewmodel.FiliaalViewModel"/>
+    </data>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/textView_mededeling"
+              android:textAlignment="center"
+              android:layout_margin="16dp"
+              android:text="@{viewModel.filiaalMededelingTitle}"
+    />
+
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textAlignment="center"
+              android:inputType="textMultiLine"
+              android:maxLines="5"
+              android:id="@+id/editText_mededeling"
+              android:hint="@string/voer_mededeling_in"
+              android:layout_margin="8dp"
+              android:text="@={viewModel.mededeling}"
+    />
+
+
+</LinearLayout>
+
+</layout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    >
+
+    <data>
+
+        <variable
+            name="filiaalmodel"
+            type="com.apps.m.tielbeke4.viewmodel.FiliaalViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/root_layout"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        >
+
+
+        <EditText
+
+            android:id="@+id/filiaal_num"
+            style="@style/Base.Widget.MaterialComponents.TextInputEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:hint="@string/Invoer_FiliaalNummer"
+            android:inputType="number"
+            android:text="@={filiaalmodel.filiaalNummer}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="52dp"
+
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filiaal_num">
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/zoek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:onClick="@{()->filiaalmodel.zoek()}"
+                android:text="@string/zoek_button_text"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_search_black_24dp"
+                app:iconTint="@color/colorPrimary"
+                app:rippleColor="@color/colorPrimary" />
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/phone_button_id"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@color/blue"
+                android:contentDescription="@string/telefoneren"
+                android:onClick="@{()->filiaalmodel.tel()}"
+                app:cornerRadius="3dp"
+                app:icon="@drawable/ic_call_black_24dp"
+                app:iconTint="@color/colorPrimary"
+                app:rippleColor="@color/colorPrimary"
+
+                />
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/kaart_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:onClick="@{()->filiaalmodel.kaart()}"
+                android:text="@string/kaart_button_text"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_map_black_24dp"
+                app:iconTint="@color/colorPrimary"
+                app:rippleColor="@color/colorPrimary" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_gegevens"
+            android:layout_width="match_parent"
+            android:layout_height="386dp"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{filiaalmodel.filiaalTitle}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.712" />
+
+    </LinearLayout>
+</layout>
+

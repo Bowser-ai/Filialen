@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.RecyclerView
+
+        android:id="@+id/filialen_lijst"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:fadeScrollbars="false"
+        android:scrollbarSize="30dp"
+        android:scrollbars="vertical"
+        tools:listItem="@layout/filialen_lijst_row"/>
+
+</RelativeLayout>

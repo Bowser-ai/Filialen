@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>
+
+    <item
+        android:id="@+id/add_mededeling"
+        android:checkable="false"
+        android:icon="@drawable/ic_border_color_black_24dp"
+        android:title="Voeg mededeling toe"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+
+    <item
+        android:id="@+id/diverse_filialen_item"
+        android:checkable="false"
+        android:title="@string/diversen_title"
+        app:showAsAction="never|ifRoom" />
+
+    <item
+        android:id="@+id/app_info_id"
+        android:checkable="false"
+        android:title="Info"
+        app:showAsAction="ifRoom" />
+
+
+</menu>
