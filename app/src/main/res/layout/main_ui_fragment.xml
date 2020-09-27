@@ -10,14 +10,26 @@
             type="com.apps.m.tielbeke4.viewmodel.FiliaalViewModel" />
     </data>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/root_layout"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="659dp"
         android:layout_margin="8dp"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
+        <Button
+            android:id="@+id/add_mededeling_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="@{()->filiaalmodel.addMededeling()}"
+            android:text="@string/add_mededeling_text"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_gegevens"
+            app:layout_constraintVertical_bias="0.882" />
 
         <EditText
 
@@ -37,18 +49,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <LinearLayout
 
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="48dp"
 
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filiaal_num">
 
@@ -102,28 +113,20 @@
         <TextView
             android:id="@+id/text_gegevens"
             android:layout_width="match_parent"
-            android:layout_height="386dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_marginBottom="8dp"
+            android:isScrollContainer="true"
             android:text="@{filiaalmodel.filiaalTitle}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.712" />
+            app:layout_constraintVertical_bias="0.154" />
 
-        <Button
-            android:id="@+id/add_mededeling_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            android:layout_gravity="center"
-            android:layout_marginBottom="8dp"
-            android:onClick="@{()->filiaalmodel.addMededeling()}"
-            android:text="@string/add_mededeling_text"/>
-
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>
 

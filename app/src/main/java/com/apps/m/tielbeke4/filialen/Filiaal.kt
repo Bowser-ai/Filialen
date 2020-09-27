@@ -14,8 +14,7 @@ data class Filiaal(
 ) : Serializable {
 
     override fun toString(): String {
-        return "$filiaalnummer\nADRES:$Address\nPOSTCODE:$Postcode\nTEL:$telnum\nINFO:$Info"
+        return "$filiaalnummer\nADRES:$Address\nPOSTCODE:$Postcode\nTEL:$telnum\nINFO:$Info\nMEDEDELING:$mededeling"
     }
-
 }
 

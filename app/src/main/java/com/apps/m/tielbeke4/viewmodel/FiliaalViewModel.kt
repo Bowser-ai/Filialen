@@ -52,6 +52,8 @@ class FiliaalViewModel(
 
     var filiaalTitle = ObservableField<String>("")
 
+    var mededelingenButtonVisibility: Int? = null
+
     val filiaalMededelingTitle = ObservableField<String>("")
         get() {
             field.set(
