@@ -16,8 +16,8 @@ android {
         applicationId "com.apps.m.tielbeke4_normal"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 13
-        versionName "1.93"
+        versionCode 14
+        versionName "1.94"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testApplicationId "com.apps.m.tielbeke4_normal_test"
     }
