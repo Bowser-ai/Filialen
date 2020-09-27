@@ -3,20 +3,18 @@ package com.apps.m.tielbeke4.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableField
+import android.view.View
 import com.apps.m.tielbeke4.QueryDatabase
 import com.apps.m.tielbeke4.filialen.Filiaal
 
 
 
 class FiliaalViewModel(
-    private val filiaalRepository: FilialenRepository
-) : ViewModel() {
-
+    private val filiaalRepository: FilialenRepository) : ViewModel() {
 
             init {
                 QueryDatabase.attachListener()
             }
-
 
     override fun onCleared() {
         super.onCleared()
@@ -27,6 +25,7 @@ class FiliaalViewModel(
         fun zoekButtonListener()
         fun clickTelListener()
         fun clickKaartListener()
+        fun addMededelingListener()
     }
 
     var mededelingAddedCallback
@@ -45,8 +44,6 @@ class FiliaalViewModel(
         this.onButtonClick = P0
     }
 
-
-
     private var onButtonClick: OnButtonListener? = null
 
     var filiaal = ObservableField<Filiaal>(Filiaal())
@@ -63,10 +60,7 @@ class FiliaalViewModel(
             )
             return field
         }
-
-
     var mededeling = ObservableField<String>("")
-
 
     /* fun addFiliaal(filiaal: Filiaal) {
          filiaalRepository.addFiliaal(filiaal)
@@ -86,7 +80,6 @@ class FiliaalViewModel(
 
 
     fun zoek() {
-
         onButtonClick?.zoekButtonListener()
     }
 
@@ -96,5 +89,9 @@ class FiliaalViewModel(
 
     fun kaart() {
         onButtonClick?.clickKaartListener()
+    }
+
+    fun addMededeling() {
+        onButtonClick?.addMededelingListener()
     }
 }

@@ -22,6 +22,7 @@
     <string name="melding">Meldingen %1$s</string>
     <string name="bel">Bel</string>
     <string name="geen_geldig_filiaal_gekozen">Geen geldig filiaal gekozen</string>
+    <string name="add_mededeling_text">Plaats of verander mededeling</string>
 
 
 </resources>

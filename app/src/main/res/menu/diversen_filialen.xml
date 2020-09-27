@@ -3,15 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 >
 
-    <item
-        android:id="@+id/add_mededeling"
-        android:checkable="false"
-        android:icon="@drawable/ic_border_color_black_24dp"
-        android:title="Voeg mededeling toe"
-        app:showAsAction="ifRoom">
-
-    </item>
-
 
     <item
         android:id="@+id/diverse_filialen_item"

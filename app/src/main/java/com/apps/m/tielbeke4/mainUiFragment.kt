@@ -39,9 +39,7 @@ class MainUiFragment : Fragment() {
 
     private val buttonListeners by lazy(mode = LazyThreadSafetyMode.NONE) {
         object : FiliaalViewModel.OnButtonListener {
-
             override fun zoekButtonListener() {
-
                 mainScope.launch {
                     try {
                         closeKeyBoard()
@@ -52,15 +50,15 @@ class MainUiFragment : Fragment() {
                                 this.filiaal.set(filiaal)
                                 filiaalTitle.set(filiaal.toString())
                                 filiaalNummer.set("")
+                                activateAddMededelingButton()
                             }
                         } else {
                             filiaalModel.apply {
                                 filiaalTitle.set("")
                                 Snackbar.make(root_layout, getString(R.string.filiaal_niet_gevonden_text), Snackbar.LENGTH_SHORT).show()
                                 filiaalNummer.set("")
-
+                                deactivateAddMededelingButton()
                             }
-
                         }
 
                     } catch (E: NumberFormatException) {
@@ -69,16 +67,13 @@ class MainUiFragment : Fragment() {
                             Snackbar.make(root_layout, getString(R.string.geen_invoer), Snackbar.LENGTH_SHORT).show()
                             filiaalNummer.set("")
                             filiaal.set(Filiaal())
-
+                            deactivateAddMededelingButton()
                         }
                     }
                 }
             }
 
-
             override fun clickKaartListener() {
-
-
                 if (filiaalModel.filiaal.get()?.Address == "") {
                     Snackbar.make(root_layout, getString(R.string.geen_geldig_adres), Snackbar.LENGTH_SHORT).show()
                     return
@@ -96,22 +91,30 @@ class MainUiFragment : Fragment() {
 
             }
 
-
             override fun clickTelListener() {
-
                 if (filiaalModel.filiaal.get()?.telnum?.contains(Regex("\\d+-\\d+")) == false) {
                     Snackbar.make(root_layout, getString(R.string.geen_geldig_telefoonnummer), Snackbar.LENGTH_SHORT).show()
                     return
                 }
-
                 val intent =
                         Intent(Intent.ACTION_DIAL, Uri.parse("tel:${binding.filiaalmodel?.filiaal?.get()?.telnum}"))
                 startActivity(intent)
             }
-
+            override fun addMededelingListener() {
+                if (filiaalModel.getFilialen()?.value?.none {
+                        it.filiaalnummer == filiaalModel.filiaal.get()?.filiaalnummer
+                    } == true) {
+                    Snackbar.make(root_layout, getString(R.string.geen_geldig_filiaal_gekozen), Snackbar.LENGTH_SHORT).show()
+                } else {
+                   fragmentManager?.findFragmentByTag(ADD_MEDEDELINGEN_FRAGMENT_TAG).let {
+                       val fragment = it as? AddMededelingFragment ?: AddMededelingFragment()
+                       fragment.isCancelable = false
+                       fragmentManager?.beginTransaction()?.add(fragment, ADD_MEDEDELINGEN_FRAGMENT_TAG)?.commit()
+                   }
+                }
+            }
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,11 +137,9 @@ class MainUiFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.diversen_filialen, menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem?) =
             when (item?.itemId) {
@@ -154,9 +155,7 @@ class MainUiFragment : Fragment() {
                         }
                     }
                     true
-
                 }
-
 
                 R.id.app_info_id -> {
                     fragmentManager?.findFragmentByTag(APP_INFO_TAG).let {
@@ -170,36 +169,8 @@ class MainUiFragment : Fragment() {
                     }
                     true
                 }
-
-                R.id.add_mededeling -> {
-                    if (filiaalModel.getFilialen()?.value?.none {
-                                it.filiaalnummer == filiaalModel.filiaal.get()?.filiaalnummer
-                            } == true) {
-                        Snackbar.make(root_layout, getString(R.string.geen_geldig_filiaal_gekozen), Snackbar.LENGTH_SHORT).show()
-
-                    } else {
-                        fragmentManager?.findFragmentByTag(ADD_MEDEDELINGEN_FRAGMENT_TAG).let {
-                            if (it == null) {
-                                val fragment = AddMededelingFragment()
-                                fragment.isCancelable = false
-                                fragmentManager?.beginTransaction()?.add(
-                                        fragment,
-                                        ADD_MEDEDELINGEN_FRAGMENT_TAG
-                                )?.commit()
-
-                            }
-                        }
-
-                    }
-                    true
-
-                }
-
-
                 else -> super.onOptionsItemSelected(item)
-
             }
-
 
     private fun closeKeyBoard() {
         val view = activity?.currentFocus
@@ -207,6 +178,14 @@ class MainUiFragment : Fragment() {
             val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun activateAddMededelingButton() {
+        binding.addMededelingButton?.visibility = View.VISIBLE
+    }
+
+    private fun deactivateAddMededelingButton() {
+        binding.addMededelingButton?.visibility = View.GONE
     }
 
     override fun onDestroy() {
