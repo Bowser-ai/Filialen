@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-
         <variable
             name="filiaalmodel"
             type="com.apps.m.tielbeke4.viewmodel.FiliaalViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="659dp"
@@ -64,7 +63,7 @@
             app:layout_constraintTop_toBottomOf="@+id/filiaal_num">
 
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/zoek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,7 +77,7 @@
                 app:rippleColor="@color/colorPrimary" />
 
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/phone_button_id"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
@@ -95,7 +94,7 @@
                 />
 
 
-            <android.support.design.button.MaterialButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/kaart_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,6 +126,6 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout"
             app:layout_constraintVertical_bias="0.154" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

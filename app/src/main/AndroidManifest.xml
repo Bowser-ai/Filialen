@@ -2,8 +2,7 @@
 
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.apps.m.tielbeke4">
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -19,6 +18,7 @@
             android:theme="@style/Theme.MaterialComponents.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden">
 
             <intent-filter>

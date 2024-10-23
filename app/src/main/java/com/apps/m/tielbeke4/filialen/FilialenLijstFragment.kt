@@ -1,15 +1,14 @@
 package com.apps.m.tielbeke4.filialen
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.view.*
+import android.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.apps.m.tielbeke4.R
 import com.apps.m.tielbeke4.adapters.FilialenLijstAdapter
 import com.apps.m.tielbeke4.viewmodel.FiliaalViewModel
@@ -40,17 +39,16 @@ class FilialenLijstFragment : Fragment() {
             val recyclerView = view.findViewById<RecyclerView>(R.id.filialen_lijst)
             recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             recyclerView.adapter = filialenLijstAdapter
-            viewmodel.getFilialen()?.observe(this, Observer {
+            viewmodel.getFilialen()?.observe(viewLifecycleOwner, Observer {
                filialenLijstAdapter.setAdapter(it as MutableList<Filiaal>)
             })
             return view
 
         }
 
-
-        override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-            inflater?.inflate(R.menu.filialen_lijst_menu, menu)
-            val menuItem = menu?.findItem(R.id.action_search)
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+            inflater.inflate(R.menu.filialen_lijst_menu, menu)
+            val menuItem = menu.findItem(R.id.action_search)
             searchView = menuItem?.actionView as SearchView
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 

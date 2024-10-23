@@ -4,12 +4,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import com.apps.m.tielbeke4.R
 import java.io.BufferedReader
 import java.io.InputStreamReader

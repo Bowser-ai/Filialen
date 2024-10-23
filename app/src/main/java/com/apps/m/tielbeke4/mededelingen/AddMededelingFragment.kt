@@ -3,12 +3,12 @@ package com.apps.m.tielbeke4.mededelingen
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import com.apps.m.tielbeke4.R
 import com.apps.m.tielbeke4.databinding.FragmentMededelingInputBinding
 import com.apps.m.tielbeke4.filialen.Filiaal

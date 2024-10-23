@@ -1,13 +1,9 @@
 package com.apps.m.tielbeke4.viewmodel
 
-
-import android.arch.lifecycle.ViewModel
-import android.databinding.ObservableField
-import android.view.View
+import androidx.databinding.ObservableField
+import androidx.lifecycle.ViewModel
 import com.apps.m.tielbeke4.QueryDatabase
 import com.apps.m.tielbeke4.filialen.Filiaal
-
-
 
 class FiliaalViewModel(
     private val filiaalRepository: FilialenRepository) : ViewModel() {

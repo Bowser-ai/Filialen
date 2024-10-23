@@ -1,18 +1,18 @@
 package com.apps.m.tielbeke4.mededelingen
 
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.apps.m.tielbeke4.R
 import com.apps.m.tielbeke4.adapters.MededelingSwipeController
 import com.apps.m.tielbeke4.adapters.MededelingenAdapter
@@ -21,13 +21,14 @@ import com.apps.m.tielbeke4.viewmodel.FiliaalViewModel
 import com.apps.m.tielbeke4.viewmodel.FilialenRepository
 import com.apps.m.tielbeke4.viewmodel.FireBaseDao
 import com.apps.m.tielbeke4.viewmodel.InjectorUtils
+import com.google.android.material.snackbar.Snackbar
 
 class MededelingenList : Fragment() {
 
 
     private val viewModel by lazy {
         val factory = InjectorUtils.provideFilialenViewModelFactory()
-        ViewModelProviders.of(activity as FragmentActivity, factory).get(FiliaalViewModel::class.java)
+        ViewModelProviders.of(activity as FragmentActivity, factory)[FiliaalViewModel::class.java]
     }
 
     lateinit var mededelingenRecyclerView: RecyclerView
@@ -85,7 +86,7 @@ class MededelingenList : Fragment() {
         mededelingenRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         mededelingenRecyclerView.adapter = mededelingenAdapter
         swipecontroller.attachToRecyclerView(mededelingenRecyclerView)
-        viewModel.getFilialen()?.observe(this, Observer {
+        viewModel.getFilialen()?.observe(viewLifecycleOwner, Observer {
 
             if (it != null && !it.isEmpty()) {
                 mededelingenAdapter.setAdapter(it.toMutableList())
