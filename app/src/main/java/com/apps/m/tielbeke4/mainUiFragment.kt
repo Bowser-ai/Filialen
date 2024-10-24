@@ -9,8 +9,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.apps.m.tielbeke4.databinding.MainUiFragmentBinding
 import com.apps.m.tielbeke4.filialen.DiversenFragment
 import com.apps.m.tielbeke4.filialen.Filiaal
@@ -25,12 +24,14 @@ import kotlinx.coroutines.launch
 
 
 class MainUiFragment : Fragment() {
-    private lateinit var binding: MainUiFragmentBinding
+    private var _binding: MainUiFragmentBinding? = null
+    private val binding get() = _binding!!
+
     private val mainJob = Job()
     private val mainScope = CoroutineScope(Dispatchers.Main + mainJob)
-    private val filiaalModel by lazy(mode = LazyThreadSafetyMode.NONE) {
+    private val filiaalModel by lazy {
         val factory = InjectorUtils.provideFilialenViewModelFactory()
-        ViewModelProviders.of(activity as FragmentActivity, factory)[FiliaalViewModel::class.java]
+        activity?.let { ViewModelProvider(it, factory)[FiliaalViewModel::class.java] }
     }
 
     private val buttonListeners by lazy(mode = LazyThreadSafetyMode.NONE) {
@@ -39,32 +40,31 @@ class MainUiFragment : Fragment() {
                 mainScope.launch {
                     try {
                         closeKeyBoard()
-                        val filiaalnummer = filiaalModel.filiaalNummer.get()?.toShort()
-                        val filiaal = filiaalModel.queryDb(filiaalnummer ?: 0)
-                        if (filiaal.filiaalnummer.toInt() != 0) {
-                            filiaalModel.apply {
-                                this.filiaal.set(filiaal)
-                                filiaalTitle.set(filiaal.toString())
-                                filiaalNummer.set("")
-                                activateAddMededelingButton()
-                            }
-                        } else {
-                            filiaalModel.apply {
-                                filiaalTitle.set("")
-                                Snackbar.make(binding.rootLayout, getString(R.string
-                                    .filiaal_niet_gevonden_text),
-                                    Snackbar.LENGTH_SHORT ).show()
-                                filiaalNummer.set("")
-                                deactivateAddMededelingButton()
+                        val filiaalnummer = filiaalModel?.filiaalNummer?.get()?.toShort()
+                        val filiaal = filiaalModel?.queryDb(filiaalnummer ?: 0)
+                        if (filiaal != null) {
+                            if (filiaal.filiaalnummer.toInt() != 0) {
+                                filiaalModel?.apply {
+                                    this.filiaal.set(filiaal)
+                                    filiaalTitle.set(filiaal.toString())
+                                    filiaalNummer.set("")
+                                    activateAddMededelingButton()
+                                }
+                            } else {
+                                filiaalModel?.apply {
+                                    filiaalTitle.set("")
+                                    Snackbar.make(binding.rootLayout, getString(R.string.filiaal_niet_gevonden_text),
+                                        Snackbar.LENGTH_SHORT ).show()
+                                    filiaalNummer.set("")
+                                    deactivateAddMededelingButton()
+                                }
                             }
                         }
 
                     } catch (E: NumberFormatException) {
-                        filiaalModel.apply {
+                        filiaalModel?.apply {
                             filiaalTitle.set("")
-                            Snackbar.make(binding.rootLayout, getString(R.string
-                                .geen_invoer)
-                                , Snackbar.LENGTH_SHORT ).show()
+                            Snackbar.make(binding.rootLayout, getString(R.string.geen_invoer), Snackbar.LENGTH_SHORT ).show()
                             filiaalNummer.set("")
                             filiaal.set(Filiaal())
                             deactivateAddMededelingButton()
@@ -74,29 +74,25 @@ class MainUiFragment : Fragment() {
             }
 
             override fun clickKaartListener() {
-                if (filiaalModel.filiaal.get()?.Address == "") {
-                    Snackbar.make(binding.rootLayout, getString(R.string
-                        .geen_geldig_adres),
-                        Snackbar.LENGTH_SHORT ).show()
+                if (filiaalModel?.filiaal?.get()?.Address == "") {
+                    Snackbar.make(binding.rootLayout, getString(R.string.geen_geldig_adres), Snackbar.LENGTH_SHORT ).show()
                     return
                 }
                 val intent = Intent( Intent.ACTION_VIEW, Uri.parse(
-                        "geo:0,0?q=${filiaalModel.filiaal.get()?.Address} " +
-                                "${filiaalModel.filiaal.get()?.Postcode}"
+                        "geo:0,0?q=${filiaalModel?.filiaal?.get()?.Address} " +
+                                "${filiaalModel?.filiaal?.get()?.Postcode}"
                     ))
 
                 if (activity?.packageManager?.resolveActivity(
                         intent, PackageManager.MATCH_DEFAULT_ONLY ) != null ) {
                     intent.`package` = "com.google.android.apps.maps"
                     startActivity(intent)
-                } else Snackbar.make( binding.rootLayout, "Google maps niet gevonden!",
-                    Snackbar.LENGTH_SHORT ).show()
+                } else Snackbar.make( binding.rootLayout, "Google maps niet gevonden!", Snackbar.LENGTH_SHORT ).show()
             }
 
             override fun clickTelListener() {
-                if (filiaalModel.filiaal.get()?.telnum?.contains(Regex("\\d+-\\d+")) == false) {
-                    Snackbar.make(binding.rootLayout, getString(R.string
-                        .geen_geldig_telefoonnummer),
+                if (filiaalModel?.filiaal?.get()?.telnum?.contains(Regex("\\d+-\\d+")) == false) {
+                    Snackbar.make( binding.rootLayout, getString(R.string.geen_geldig_telefoonnummer),
                         Snackbar.LENGTH_SHORT ).show()
                     return
                 }
@@ -107,18 +103,17 @@ class MainUiFragment : Fragment() {
             }
 
             override fun addMededelingListener() {
-                if (filiaalModel.getFilialen()?.value?.none {
-                        it.filiaalnummer == filiaalModel.filiaal.get()?.filiaalnummer
+                if (filiaalModel?.getFilialen()?.value?.none {
+                        it.filiaalnummer == filiaalModel!!.filiaal.get()?.filiaalnummer
                     } == true)
                 {
-                    Snackbar.make(binding.rootLayout, getString(R.string
-                        .geen_geldig_filiaal_gekozen),
+                    Snackbar.make(binding.rootLayout, getString(R.string.geen_geldig_filiaal_gekozen),
                         Snackbar.LENGTH_SHORT).show()
                 } else {
-                    fragmentManager?.findFragmentByTag(ADD_MEDEDELINGEN_FRAGMENT_TAG).let {
+                    parentFragmentManager.findFragmentByTag(ADD_MEDEDELINGEN_FRAGMENT_TAG).let {
                         val fragment = it as? AddMededelingFragment ?: AddMededelingFragment()
                         fragment.isCancelable = false
-                        fragmentManager?.beginTransaction()?.add(fragment, ADD_MEDEDELINGEN_FRAGMENT_TAG)?.commit()
+                        parentFragmentManager.beginTransaction().add(fragment, ADD_MEDEDELINGEN_FRAGMENT_TAG).commit()
                     }
                 }
             }
@@ -132,18 +127,17 @@ class MainUiFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
-        binding = MainUiFragmentBinding.inflate(inflater)
+        _binding = DataBindingUtil.inflate(inflater, R.layout.main_ui_fragment, container, false)
         binding.filiaalmodel = filiaalModel
-        filiaalModel.apply {
+        filiaalModel?.apply {
             setOnButtonListener(buttonListeners)
             mededelingAddedCallback = {
-                Snackbar.make(binding.rootLayout, "Mededeling is toegevoegd" +
-                        " aan de database", Snackbar.LENGTH_LONG ).show()
+                Snackbar.make(binding.rootLayout, "Mededeling is toegevoegd aan de database", Snackbar.LENGTH_LONG ).show()
             }
         }
 
         binding.executePendingBindings()
-        filiaalModel.mededelingenButtonVisibility?.let {
+        filiaalModel?.mededelingenButtonVisibility?.let {
             when (it) {
                 View.VISIBLE -> activateAddMededelingButton()
                 else -> deactivateAddMededelingButton()
@@ -159,13 +153,13 @@ class MainUiFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.diverse_filialen_item -> {
-                fragmentManager?.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
+                parentFragmentManager.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
                     if (it == null) {
-                        fragmentManager?.beginTransaction()
-                            ?.add(
+                        parentFragmentManager.beginTransaction()
+                            .add(
                                 DiversenFragment(),
                                 DIVERSE_FRAGMENT_TAG
-                            )?.commit()
+                            ).commit()
 
                     }
                 }
@@ -173,13 +167,12 @@ class MainUiFragment : Fragment() {
             }
 
             R.id.app_info_id -> {
-                fragmentManager?.findFragmentByTag(APP_INFO_TAG).let {
+                parentFragmentManager.findFragmentByTag(APP_INFO_TAG).let {
                     if (it == null) {
                         val fragment = AppInfoDialogFragment()
                         fragment.isCancelable = false
-                        fragmentManager?.beginTransaction()
-                            ?.add(fragment, APP_INFO_TAG)?.commit()
-
+                        parentFragmentManager.beginTransaction()
+                            .add(fragment, APP_INFO_TAG).commit()
                     }
                 }
                 true
@@ -197,24 +190,23 @@ class MainUiFragment : Fragment() {
 
     private fun activateAddMededelingButton() {
         binding.addMededelingButton?.visibility = View.VISIBLE
-        filiaalModel.mededelingenButtonVisibility = View.VISIBLE
+        filiaalModel?.mededelingenButtonVisibility = View.VISIBLE
     }
 
     private fun deactivateAddMededelingButton() {
         binding.addMededelingButton?.visibility = View.GONE
-        filiaalModel.mededelingenButtonVisibility = View.GONE
+        filiaalModel?.mededelingenButtonVisibility = View.GONE
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mainJob.cancel()
+        _binding = null
     }
 
     companion object {
         private const val DIVERSE_FRAGMENT_TAG = "diversen_fragement"
-        private const val FILIALEN_LIJST_FRAGMENT_TAG = "filialen_lijst_fragment"
         private const val APP_INFO_TAG = "AppInfoDialogFragment"
-        private const val MEDEDELINGEN_FRAGMENT_TAG = "MededelingenList"
         private const val ADD_MEDEDELINGEN_FRAGMENT_TAG = "AddMededelingFragment"
     }
 }

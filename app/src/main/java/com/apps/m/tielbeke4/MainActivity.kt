@@ -2,22 +2,15 @@ package com.apps.m.tielbeke4
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.viewpager2.widget.ViewPager2
 import com.apps.m.tielbeke4.adapters.TabPagerAdapter
 import com.apps.m.tielbeke4.databinding.ToolbarBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.lang.RuntimeException
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ToolbarBinding
-    fun onToolBar() {
-        setSupportActionBar(binding.toolBar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolBar.setNavigationOnClickListener {
-            onBackPressed()
-        }
-
-    }
-
     override fun onBackPressed() {
         super.onBackPressed()
         if (supportFragmentManager.backStackEntryCount == 0) {
@@ -29,36 +22,34 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        binding = ToolbarBinding.inflate(layoutInflater)
+        val toolBar = findViewById<Toolbar>(R.id.tool_bar)
+        onToolBar(toolBar)
         configureTabLayout()
-        onToolBar()
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, MainUiFragment()).commit()
+    }
+
+    private fun onToolBar(toolbar: Toolbar) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
     }
 
     private fun configureTabLayout() {
-        val tabLayout = binding.tabLayout
-        val pager = binding.pager
-        val tabtitles = listOf("HoofdScherm", "FilialenLijst", "Mededelingen")
-        for (index in 0..2)
-            tabLayout.addTab(tabLayout.newTab().setText("Hmm"))
+        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val pager = findViewById<ViewPager2>(R.id.pager)
 
-        pager.addOnPageChangeListener(
-                TabLayout.TabLayoutOnPageChangeListener(tabLayout)
-        )
-        val adapter = TabPagerAdapter(supportFragmentManager,  tabLayout.tabCount)
+        val adapter = TabPagerAdapter(supportFragmentManager,  lifecycle, 3)
         pager.adapter = adapter
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(p0: TabLayout.Tab?) {
+        (TabLayoutMediator(tabLayout, pager){ tab, pos ->
+            tab.text = when (pos) {
+                0 -> "Hoofdscherm"
+                1 -> "Filialen"
+                2 -> "Mededelingen"
+                else -> throw RuntimeException("Out of range for viewpager tablayout.")
             }
-
-            override fun onTabUnselected(p0: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabSelected(p0: TabLayout.Tab?) {
-                pager.currentItem = p0?.position ?: 0
-            }
-        })
+        }).attach()
     }
 }
