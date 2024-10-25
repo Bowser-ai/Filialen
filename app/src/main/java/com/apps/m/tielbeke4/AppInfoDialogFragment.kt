@@ -5,35 +5,39 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.TextView
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.DialogFragment
+import com.apps.m.tielbeke4.databinding.AppInfoDialogFragmentBinding
 
 class AppInfoDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val inflater = requireActivity().layoutInflater
-        val diversen = inflater.inflate(
-            R.layout.app_info_dialog_fragment, null)
+        val binding = AppInfoDialogFragmentBinding.inflate(layoutInflater)
 
-        val mIntent: Intent = ShareCompat.IntentBuilder.from(requireActivity())
+        // The intent to automatically open an available email client, and
+        // prefill the subject.
+        val mIntent: Intent = ShareCompat.IntentBuilder(requireActivity())
             .setType("text/plain")
-        .addEmailTo(getString(R.string.E_mail)).setSubject("Nieuwe Filialen")
-        .createChooserIntent()
+        .addEmailTo(getString(R.string.E_mail)).setSubject(getString(R
+            .string.new_branches)).createChooserIntent()
 
-        val textViewEmail = diversen.findViewById<TextView>(R.id
-            .text_view_email)
+        val textViewEmail = binding.textViewEmail
 
-        if(activity?.packageManager?.resolveActivity(mIntent,PackageManager
-            .MATCH_DEFAULT_ONLY) == null) {
-            textViewEmail.isEnabled = false
-        }
+        // Set the email link on active if a email client could be found.
+        activity
+            ?.packageManager
+            ?.resolveActivity(
+                mIntent,
+            PackageManager
+            .MATCH_DEFAULT_ONLY)?.let {
+                textViewEmail.isEnabled = true
+                textViewEmail.setOnClickListener {
+                    startActivity(mIntent)
+                }
+            }
 
-        textViewEmail.setOnClickListener {
-            startActivity(mIntent)
-        }
 
-       return AlertDialog.Builder(context).setView(diversen.rootView)
+       return AlertDialog.Builder(context).setView(binding.root)
             .setPositiveButton("Ok")  { dialog, _ ->
                 dialog.dismiss()
             }.show()
