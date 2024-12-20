@@ -27,6 +27,8 @@
     <string name="main_view">Hoofdscherm</string>
     <string name="branches">Filialen</string>
     <string name="remarks">Hoofdscherm</string>
-
-
+    <string name="address">Address: %1$s</string>
+    <string name="zip_code">Postcode: %1$s</string>
+    <string name="telephone_number">Tel: %1$s</string>
+    <string name="information">Info: %1$s</string>
 </resources>

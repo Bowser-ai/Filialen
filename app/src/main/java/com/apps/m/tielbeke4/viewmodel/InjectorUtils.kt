@@ -1,15 +1,12 @@
 package com.apps.m.tielbeke4.viewmodel
 
-import com.apps.m.tielbeke4.QueryDatabase
+import com.apps.m.tielbeke4.data.FilialenIO
 
 object InjectorUtils {
-
-    fun provideFilialenViewModelFactory() : FilialenViewModelFactory {
-        return FilialenViewModelFactory(
+    fun provideFilialenViewModelFactory(): FilialenViewModelFactory =
+        FilialenViewModelFactory(
             FilialenRepository.getInstance(
-                QueryDatabase.dao
-            )
+                FilialenIO.dao,
+            ),
         )
-
-    }
 }

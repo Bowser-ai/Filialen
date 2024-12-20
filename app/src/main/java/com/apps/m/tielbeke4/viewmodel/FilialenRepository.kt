@@ -1,11 +1,11 @@
 package com.apps.m.tielbeke4.viewmodel
 
 import android.util.Log
-import com.apps.m.tielbeke4.QueryDatabase
 import com.apps.m.tielbeke4.filialen.Filiaal
 
-class FilialenRepository private constructor(private val fireBaseDao: FireBaseDao) {
-
+class FilialenRepository private constructor(
+    private val fireBaseDao: FilialenDao,
+) {
     init {
         Log.d("TAGREPO", "repo init")
     }
@@ -22,15 +22,6 @@ class FilialenRepository private constructor(private val fireBaseDao: FireBaseDa
             fireBaseDao.mededelingDeletedCallback = value
         }
 
-
-    /* fun addFiliaal(filiaal: Filiaal) {
-         fireBaseDao.addFiliaal(filiaal)
-     }
-
-     fun deleteFiliaal(filiaal: Filiaal) {
-         fireBaseDao.deleteFiliaal(filiaal)
-     }*/
-
     fun addMededeling(filiaal: Filiaal) {
         fireBaseDao.addMededeling(filiaal)
     }
@@ -39,22 +30,20 @@ class FilialenRepository private constructor(private val fireBaseDao: FireBaseDa
         fireBaseDao.deleteMededeling(filiaal)
     }
 
-    suspend fun queryDb(filiaalnummer:Short) = fireBaseDao.queryDb(filiaalnummer)
+    suspend fun queryDb(filiaalnummer: Short) = fireBaseDao.queryDb(filiaalnummer)
 
-    fun getFilialen() =
-        fireBaseDao.getFilialen()
+    fun getFilialen() = fireBaseDao.getFilialen()
 
     companion object {
-
         @Volatile
         private var instance: FilialenRepository? = null
 
-        fun getInstance(fireBaseDao: FireBaseDao) =
+        fun getInstance(fireBaseDao: FilialenDao) =
             instance ?: synchronized(this) {
                 instance
                     ?: FilialenRepository(fireBaseDao).also {
-                    instance = it
-                }
+                        instance = it
+                    }
             }
     }
 }

@@ -12,8 +12,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.apps.m.tielbeke4.databinding.MainUiFragmentBinding
 import com.apps.m.tielbeke4.filialen.DiversenFragment
@@ -26,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.lang.RuntimeException
 
 class MainUiFragment : Fragment() {
     private var _binding: MainUiFragmentBinding? = null
@@ -163,11 +167,6 @@ class MainUiFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -203,44 +202,56 @@ class MainUiFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(
-        menu: Menu,
-        inflater: MenuInflater,
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
     ) {
-        inflater.inflate(R.menu.diversen_filialen, menu)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    inflater: MenuInflater,
+                ) {
+                    inflater.inflate(R.menu.diversen_filialen, menu)
+                }
+
+                override fun onMenuItemSelected(item: MenuItem): Boolean =
+                    when (item.itemId) {
+                        R.id.diverse_filialen_item -> {
+                            parentFragmentManager.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
+                                if (it == null) {
+                                    parentFragmentManager
+                                        .beginTransaction()
+                                        .add(
+                                            DiversenFragment(),
+                                            DIVERSE_FRAGMENT_TAG,
+                                        ).commit()
+                                }
+                            }
+                            true
+                        }
+
+                        R.id.app_info_id -> {
+                            parentFragmentManager.findFragmentByTag(APP_INFO_TAG).let {
+                                if (it == null) {
+                                    val fragment = AppInfoDialogFragment()
+                                    fragment.isCancelable = false
+                                    parentFragmentManager
+                                        .beginTransaction()
+                                        .add(fragment, APP_INFO_TAG)
+                                        .commit()
+                                }
+                            }
+                            true
+                        }
+                        else -> throw RuntimeException("Invalid menu item selected ${item.itemId}.")
+                    }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.diverse_filialen_item -> {
-                parentFragmentManager.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
-                    if (it == null) {
-                        parentFragmentManager
-                            .beginTransaction()
-                            .add(
-                                DiversenFragment(),
-                                DIVERSE_FRAGMENT_TAG,
-                            ).commit()
-                    }
-                }
-                true
-            }
-
-            R.id.app_info_id -> {
-                parentFragmentManager.findFragmentByTag(APP_INFO_TAG).let {
-                    if (it == null) {
-                        val fragment = AppInfoDialogFragment()
-                        fragment.isCancelable = false
-                        parentFragmentManager
-                            .beginTransaction()
-                            .add(fragment, APP_INFO_TAG)
-                            .commit()
-                    }
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
 
     private fun closeKeyBoard() {
         val view = activity?.currentFocus

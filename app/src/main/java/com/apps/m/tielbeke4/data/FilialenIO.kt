@@ -1,31 +1,40 @@
-package com.apps.m.tielbeke4
+package com.apps.m.tielbeke4.data
 
 import com.apps.m.tielbeke4.filialen.Filiaal
-import com.apps.m.tielbeke4.viewmodel.FireBaseDao
-import com.google.firebase.database.*
-import kotlinx.coroutines.*
+import com.apps.m.tielbeke4.getIndex
+import com.apps.m.tielbeke4.viewmodel.FilialenDao
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-object QueryDatabase {
+object FilialenIO {
     var mededelingAddedCallback: (() -> Unit)? = null
     var mededelingDeletedCallback: (() -> Unit)? = null
     var dataLoaded = false
 
-    val dao = FireBaseDao()
+    val dao = FilialenDao()
 
     private var myRef: DatabaseReference
 
     private val listener =
         object : ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+            override fun onCancelled(p0: DatabaseError) {}
 
             override fun onChildMoved(
                 p0: DataSnapshot,
                 p1: String?,
-            ) {
-                TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
-            }
+            ) {}
 
             override fun onChildChanged(
                 p0: DataSnapshot,
