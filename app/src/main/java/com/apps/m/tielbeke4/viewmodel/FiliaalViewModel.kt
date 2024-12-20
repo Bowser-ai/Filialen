@@ -2,25 +2,28 @@ package com.apps.m.tielbeke4.viewmodel
 
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
-import com.apps.m.tielbeke4.QueryDatabase
+import com.apps.m.tielbeke4.data.FilialenIO
 import com.apps.m.tielbeke4.filialen.Filiaal
 
 class FiliaalViewModel(
-    private val filiaalRepository: FilialenRepository) : ViewModel() {
-
-            init {
-                QueryDatabase.attachListener()
-            }
+    private val filiaalRepository: FilialenRepository,
+) : ViewModel() {
+    init {
+        FilialenIO.attachListener()
+    }
 
     override fun onCleared() {
         super.onCleared()
-        QueryDatabase.detachListener()
+        FilialenIO.detachListener()
     }
 
     interface OnButtonListener {
         fun zoekButtonListener()
+
         fun clickTelListener()
+
         fun clickKaartListener()
+
         fun addMededelingListener()
     }
 
@@ -54,28 +57,15 @@ class FiliaalViewModel(
         get() {
             field.set(
                 "${filiaal.get()?.filiaalnummer}\n" +
-                        "${filiaal.get()?.Address}"
+                    "${filiaal.get()?.Address}",
             )
             return field
         }
     var mededeling = ObservableField<String>("")
 
-    /* fun addFiliaal(filiaal: Filiaal) {
-         filiaalRepository.addFiliaal(filiaal)
-     }
-
-     fun deleteFiliaal(filiaal: Filiaal) {
-         filiaalRepository.deleteFiliaal(filiaal)
-     }*/
-/*
-    fun changeFiliaal(filiaal: Filiaal) {
-        filiaalRepository.changeFiliaal(filiaal)
-    }*/
-
     fun getFilialen() = filiaalRepository.getFilialen()
 
-    suspend fun queryDb(filiaalnummer:Short) = filiaalRepository.queryDb(filiaalnummer)
-
+    suspend fun queryDb(filiaalnummer: Short) = filiaalRepository.queryDb(filiaalnummer)
 
     fun zoek() {
         onButtonClick?.zoekButtonListener()

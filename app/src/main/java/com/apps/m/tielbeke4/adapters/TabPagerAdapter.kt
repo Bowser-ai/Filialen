@@ -8,14 +8,18 @@ import com.apps.m.tielbeke4.MainUiFragment
 import com.apps.m.tielbeke4.filialen.FilialenLijstFragment
 import com.apps.m.tielbeke4.mededelingen.MededelingenList
 
-class TabPagerAdapter(fm: FragmentManager, liveCycle: Lifecycle, private val tabCount: Int):
-FragmentStateAdapter(fm, liveCycle){
-    override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> MainUiFragment()
-        1 -> FilialenLijstFragment()
-        2-> MededelingenList()
-        else-> throw RuntimeException("X")
-    }
+class TabPagerAdapter(
+    fm: FragmentManager,
+    liveCycle: Lifecycle,
+    private val tabCount: Int,
+) : FragmentStateAdapter(fm, liveCycle) {
+    override fun createFragment(position: Int): Fragment =
+        when (position) {
+            0 -> MainUiFragment()
+            1 -> FilialenLijstFragment()
+            2 -> MededelingenList()
+            else -> throw RuntimeException("X")
+        }
 
     override fun getItemCount(): Int = tabCount
 }

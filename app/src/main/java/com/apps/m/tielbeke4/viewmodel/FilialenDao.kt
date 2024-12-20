@@ -2,53 +2,40 @@ package com.apps.m.tielbeke4.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.apps.m.tielbeke4.QueryDatabase
+import com.apps.m.tielbeke4.data.FilialenIO
 import com.apps.m.tielbeke4.filialen.Filiaal
 
-
-class FireBaseDao {
+class FilialenDao {
     var mededelingAddedCallback
-        get() = QueryDatabase.mededelingAddedCallback
+        get() = FilialenIO.mededelingAddedCallback
         set(value) {
-            QueryDatabase.mededelingAddedCallback = value
+            FilialenIO.mededelingAddedCallback = value
         }
 
     var mededelingDeletedCallback
-        get() = QueryDatabase.mededelingDeletedCallback
+        get() = FilialenIO.mededelingDeletedCallback
         set(value) {
-            QueryDatabase.mededelingDeletedCallback = value
+            FilialenIO.mededelingDeletedCallback = value
         }
-
 
     private val filialenList = mutableListOf<Filiaal>()
     private val filialen = MutableLiveData<List<Filiaal>>()
-
 
     init {
         filialen.postValue(filialenList)
     }
 
-    /* fun addFiliaal(filiaal: Filiaal) {
-
-     }
-
-     fun deleteFiliaal(filiaal: Filiaal) {
-
-     }*/
-
-
     fun addMededeling(filiaal: Filiaal) {
-        QueryDatabase.addMededeling(filiaal)
+        FilialenIO.addMededeling(filiaal)
     }
 
     fun deleteMededeling(filiaal: Filiaal) {
-        QueryDatabase.deleteMededeling(filiaal)
+        FilialenIO.deleteMededeling(filiaal)
     }
 
     fun getFilialen() = filialen as? LiveData<List<Filiaal>>
 
-    suspend fun queryDb(filiaalnummer:Short) = QueryDatabase.queryDb(filiaalnummer)
-
+    suspend fun queryDb(filiaalnummer: Short) = FilialenIO.queryDb(filiaalnummer)
 
     suspend fun retrieveFromDb(listOp: suspend (MutableList<Filiaal>) -> Unit) {
         listOp(filialenList)

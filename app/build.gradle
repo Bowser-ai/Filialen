@@ -6,19 +6,19 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     namespace "com.apps.m.tielbeke4"
-    compileSdkVersion 34
     dataBinding {
         enabled = true
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = 21
+        targetCompatibility = 21
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "21"
     }
     defaultConfig {
         applicationId "com.apps.m.tielbeke4_normal"
+        compileSdk 34
         minSdkVersion 28
         versionCode 14
         versionName "1.95"
@@ -27,9 +27,7 @@ android {
     }
 
     buildTypes {
-
     }
-
 }
 
 dependencies {
@@ -49,7 +47,7 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:2.8.6"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
 }
 

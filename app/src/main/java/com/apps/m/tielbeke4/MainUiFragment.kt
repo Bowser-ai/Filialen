@@ -5,10 +5,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.apps.m.tielbeke4.databinding.MainUiFragmentBinding
 import com.apps.m.tielbeke4.filialen.DiversenFragment
@@ -21,7 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
+import java.lang.RuntimeException
 
 class MainUiFragment : Fragment() {
     private var _binding: MainUiFragmentBinding? = null
@@ -53,18 +61,26 @@ class MainUiFragment : Fragment() {
                             } else {
                                 filiaalModel?.apply {
                                     filiaalTitle.set("")
-                                    Snackbar.make(binding.rootLayout, getString(R.string.filiaal_niet_gevonden_text),
-                                        Snackbar.LENGTH_SHORT ).show()
+                                    Snackbar
+                                        .make(
+                                            binding.rootLayout,
+                                            getString(R.string.filiaal_niet_gevonden_text),
+                                            Snackbar.LENGTH_SHORT,
+                                        ).show()
                                     filiaalNummer.set("")
                                     deactivateAddMededelingButton()
                                 }
                             }
                         }
-
                     } catch (E: NumberFormatException) {
                         filiaalModel?.apply {
                             filiaalTitle.set("")
-                            Snackbar.make(binding.rootLayout, getString(R.string.geen_invoer), Snackbar.LENGTH_SHORT ).show()
+                            Snackbar
+                                .make(
+                                    binding.rootLayout,
+                                    getString(R.string.geen_invoer),
+                                    Snackbar.LENGTH_SHORT,
+                                ).show()
                             filiaalNummer.set("")
                             filiaal.set(Filiaal())
                             deactivateAddMededelingButton()
@@ -75,40 +91,71 @@ class MainUiFragment : Fragment() {
 
             override fun clickKaartListener() {
                 if (filiaalModel?.filiaal?.get()?.Address == "") {
-                    Snackbar.make(binding.rootLayout, getString(R.string.geen_geldig_adres), Snackbar.LENGTH_SHORT ).show()
+                    Snackbar
+                        .make(
+                            binding.rootLayout,
+                            getString(R.string.geen_geldig_adres),
+                            Snackbar.LENGTH_SHORT,
+                        ).show()
                     return
                 }
-                val intent = Intent( Intent.ACTION_VIEW, Uri.parse(
-                        "geo:0,0?q=${filiaalModel?.filiaal?.get()?.Address} " +
-                                "${filiaalModel?.filiaal?.get()?.Postcode}"
-                    ))
+                val intent =
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(
+                            "geo:0,0?q=${filiaalModel?.filiaal?.get()?.Address} " +
+                                "${filiaalModel?.filiaal?.get()?.Postcode}",
+                        ),
+                    )
 
                 if (activity?.packageManager?.resolveActivity(
-                        intent, PackageManager.MATCH_DEFAULT_ONLY ) != null ) {
+                        intent,
+                        PackageManager.MATCH_DEFAULT_ONLY,
+                    ) != null
+                ) {
                     intent.`package` = "com.google.android.apps.maps"
                     startActivity(intent)
-                } else Snackbar.make( binding.rootLayout, "Google maps niet gevonden!", Snackbar.LENGTH_SHORT ).show()
+                } else {
+                    Snackbar.make(binding.rootLayout, "Google maps niet gevonden!", Snackbar.LENGTH_SHORT).show()
+                }
             }
 
             override fun clickTelListener() {
-                if (filiaalModel?.filiaal?.get()?.telnum?.contains(Regex("\\d+-\\d+")) == false) {
-                    Snackbar.make( binding.rootLayout, getString(R.string.geen_geldig_telefoonnummer),
-                        Snackbar.LENGTH_SHORT ).show()
+                if (filiaalModel
+                        ?.filiaal
+                        ?.get()
+                        ?.telnum
+                        ?.contains(Regex("\\d+-\\d+")) == false
+                ) {
+                    Snackbar
+                        .make(
+                            binding.rootLayout,
+                            getString(R.string.geen_geldig_telefoonnummer),
+                            Snackbar.LENGTH_SHORT,
+                        ).show()
                     return
                 }
-                val intent = Intent(Intent.ACTION_DIAL, Uri.parse(
-                    "tel:${binding.filiaalmodel?.filiaal?.get()?.telnum}")
-                )
+                val intent =
+                    Intent(
+                        Intent.ACTION_DIAL,
+                        Uri.parse(
+                            "tel:${binding.filiaalmodel?.filiaal?.get()?.telnum}",
+                        ),
+                    )
                 startActivity(intent)
             }
 
             override fun addMededelingListener() {
                 if (filiaalModel?.getFilialen()?.value?.none {
                         it.filiaalnummer == filiaalModel!!.filiaal.get()?.filiaalnummer
-                    } == true)
-                {
-                    Snackbar.make(binding.rootLayout, getString(R.string.geen_geldig_filiaal_gekozen),
-                        Snackbar.LENGTH_SHORT).show()
+                    } == true
+                ) {
+                    Snackbar
+                        .make(
+                            binding.rootLayout,
+                            getString(R.string.geen_geldig_filiaal_gekozen),
+                            Snackbar.LENGTH_SHORT,
+                        ).show()
                 } else {
                     parentFragmentManager.findFragmentByTag(ADD_MEDEDELINGEN_FRAGMENT_TAG).let {
                         val fragment = it as? AddMededelingFragment ?: AddMededelingFragment()
@@ -120,19 +167,28 @@ class MainUiFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
-        _binding = DataBindingUtil.inflate(inflater, R.layout.main_ui_fragment, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding =
+            DataBindingUtil.inflate(
+                inflater,
+                R.layout.main_ui_fragment,
+                container,
+                false,
+            )
         binding.filiaalmodel = filiaalModel
         filiaalModel?.apply {
             setOnButtonListener(buttonListeners)
             mededelingAddedCallback = {
-                Snackbar.make(binding.rootLayout, "Mededeling is toegevoegd aan de database", Snackbar.LENGTH_LONG ).show()
+                Snackbar
+                    .make(
+                        binding.rootLayout,
+                        "Mededeling is toegevoegd aan de database",
+                        Snackbar.LENGTH_LONG,
+                    ).show()
             }
         }
 
@@ -146,39 +202,56 @@ class MainUiFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.diversen_filialen, menu)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    inflater: MenuInflater,
+                ) {
+                    inflater.inflate(R.menu.diversen_filialen, menu)
+                }
+
+                override fun onMenuItemSelected(item: MenuItem): Boolean =
+                    when (item.itemId) {
+                        R.id.diverse_filialen_item -> {
+                            parentFragmentManager.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
+                                if (it == null) {
+                                    parentFragmentManager
+                                        .beginTransaction()
+                                        .add(
+                                            DiversenFragment(),
+                                            DIVERSE_FRAGMENT_TAG,
+                                        ).commit()
+                                }
+                            }
+                            true
+                        }
+
+                        R.id.app_info_id -> {
+                            parentFragmentManager.findFragmentByTag(APP_INFO_TAG).let {
+                                if (it == null) {
+                                    val fragment = AppInfoDialogFragment()
+                                    fragment.isCancelable = false
+                                    parentFragmentManager
+                                        .beginTransaction()
+                                        .add(fragment, APP_INFO_TAG)
+                                        .commit()
+                                }
+                            }
+                            true
+                        }
+                        else -> throw RuntimeException("Invalid menu item selected ${item.itemId}.")
+                    }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            R.id.diverse_filialen_item -> {
-                parentFragmentManager.findFragmentByTag(DIVERSE_FRAGMENT_TAG).let {
-                    if (it == null) {
-                        parentFragmentManager.beginTransaction()
-                            .add(
-                                DiversenFragment(),
-                                DIVERSE_FRAGMENT_TAG
-                            ).commit()
-
-                    }
-                }
-                true
-            }
-
-            R.id.app_info_id -> {
-                parentFragmentManager.findFragmentByTag(APP_INFO_TAG).let {
-                    if (it == null) {
-                        val fragment = AppInfoDialogFragment()
-                        fragment.isCancelable = false
-                        parentFragmentManager.beginTransaction()
-                            .add(fragment, APP_INFO_TAG).commit()
-                    }
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
 
     private fun closeKeyBoard() {
         val view = activity?.currentFocus
